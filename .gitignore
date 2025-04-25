@@ -9,4 +9,3 @@ data/
 faast.log
 *.py[cod]
 .env
-setup.py
