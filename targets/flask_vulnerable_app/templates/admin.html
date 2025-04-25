@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Aplicativo Vulnerável</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        h1 {
+            color: #d9534f;
+            margin: 0;
+        }
+        .nav-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .nav-links a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #d9534f;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .nav-links a:hover {
+            background-color: #c9302c;
+        }
+        .panel {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .logs {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            height: 300px;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+            color: #8a6d3b;
+            padding: 15px;
+            border-radius: 3px;
+            margin: 20px 0;
+        }
+        #command-output {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 3px;
+            font-family: monospace;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Painel de Admin</h1>
+        </header>
+        
+        <div class="panel">
+            <h2>Visualização de Logs</h2>
+            <p>Visualize logs do sistema:</p>
+            
+            <!-- Vulnerabilidade: Path Traversal -->
+            <form method="get" action="/admin">
+                <div class="form-group">
+                    <label for="log">Arquivo de Log:</label>
+                    <input type="text" id="log" name="log" value="app.log">
+                </div>
+                <button type="submit">Visualizar Log</button>
+            </form>
+            
+            <div class="logs">
+{{ logs }}
+            </div>
+            
+            <div class="warning">
+                <strong>Vulnerabilidade:</strong> Esta função é vulnerável a Path Traversal. 
+                Tente acessar outros arquivos com <code>../../../etc/passwd</code> ou similar.
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Execução de Comandos</h2>
+            <p>Execute comandos no servidor:</p>
+            
+            <!-- Vulnerabilidade: Command Injection (RCE) -->
+            <div class="form-group">
+                <label for="command">Comando:</label>
+                <input type="text" id="command" placeholder="ls -la">
+            </div>
+            <button id="execute-btn">Executar</button>
+            
+            <div id="command-output"></div>
+            
+            <div class="warning">
+                <strong>Vulnerabilidade:</strong> Esta função é vulnerável a injeção de comandos.
+                Tente comandos como <code>ls -la; cat /etc/passwd</code> ou similar.
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/dashboard">Voltar para Dashboard</a>
+        </div>
+    </div>
+    
+    <script>
+        // JavaScript para executar comandos via AJAX
+        document.getElementById('execute-btn').addEventListener('click', function() {
+            const command = document.getElementById('command').value;
+            const outputDiv = document.getElementById('command-output');
+            
+            outputDiv.style.display = 'block';
+            outputDiv.innerHTML = 'Executando comando...';
+            
+            fetch('/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'command=' + encodeURIComponent(command)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    outputDiv.innerHTML = '<span style="color: #ff6b6b;">Erro: ' + data.error + '</span>';
+                } else {
+                    outputDiv.innerHTML = data.output.replace(/\n/g, '<br>');
+                }
+            })
+            .catch(error => {
+                outputDiv.innerHTML = '<span style="color: #ff6b6b;">Erro na requisição: ' + error + '</span>';
+            });
+        });
+    </script>
+</body>
+</html>

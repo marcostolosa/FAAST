@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas - Aplicativo Vulnerável</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        h1 {
+            color: #d9534f;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            min-height: 100px;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+        .notes-list {
+            margin-top: 30px;
+        }
+        .note-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        .note-content {
+            margin-bottom: 10px;
+        }
+        .note-date {
+            color: #777;
+            font-size: 12px;
+            text-align: right;
+        }
+        .nav-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .nav-links a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #d9534f;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .nav-links a:hover {
+            background-color: #c9302c;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+            color: #8a6d3b;
+            padding: 15px;
+            border-radius: 3px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Minhas Notas</h1>
+        </header>
+        
+        <div class="note-form">
+            <h2>Adicionar Nova Nota</h2>
+            
+            <!-- Vulnerabilidade: Stored XSS -->
+            <form method="post" action="/notes">
+                <div class="form-group">
+                    <label for="content">Conteúdo da Nota:</label>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <button type="submit">Salvar Nota</button>
+            </form>
+            
+            <div class="warning">
+                <strong>Vulnerabilidade:</strong> Esta função é vulnerável a Cross-Site Scripting (XSS) armazenado.
+                Tente adicionar uma nota com código JavaScript como <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>
+            </div>
+        </div>
+        
+        <div class="notes-list">
+            <h2>Notas Salvas</h2>
+            
+            {% if notes %}
+                {% for note in notes %}
+                <div class="note-item">
+                    <!-- Vulnerabilidade: Stored XSS - o conteúdo é renderizado sem escape -->
+                    <div class="note-content">{{ note[0]|safe }}</div>
+                    <div class="note-date">{{ note[1] }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Nenhuma nota encontrada. Adicione sua primeira nota acima.</p>
+            {% endif %}
+        </div>
+        
+        <div class="nav-links">
+            <a href="/dashboard">Voltar para Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

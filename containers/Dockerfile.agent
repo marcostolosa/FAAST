@@ -1,0 +1,33 @@
+FROM python:3.9-slim
+
+LABEL maintainer="FAAST Project <your@email.com>"
+LABEL description="Container para o agente FAAST que orquestra análises SAST e DAST"
+
+# Define diretório de trabalho
+WORKDIR /app
+
+# Instala dependências do sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copia requirements.txt
+COPY requirements.txt .
+
+# Instala dependências Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Cria diretório de dados
+RUN mkdir -p /app/data/reports /app/data/mappings
+
+# Copia código-fonte
+COPY . .
+
+# Define variáveis de ambiente
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Define o comando padrão
+CMD ["python", "-m", "faast_agent.main"]

@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/marcostolosa/faast/graphs/commit-activity)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
-[![GitHub stars](https://img.shields.io/github/stars/marcostolosa/faast.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/marcostolosa/faast/stargazers/)
+[![GitHub stars](https://img.shields.io/github/stars/marcostolosa/faast.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/marcostolosa/faast)
 
 <p align="center">
   <img src="img/faast_logo.png" alt="FAAST Logo" width="300"/>

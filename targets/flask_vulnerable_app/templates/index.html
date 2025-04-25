@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo Vulnerável - FAAST Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        h1 {
+            color: #d9534f;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #d9534f;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        nav a:hover {
+            background-color: #c9302c;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+            color: #8a6d3b;
+            padding: 15px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+        }
+        .feature {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aplicativo Vulnerável</h1>
+            <p>Uma aplicação web intencionalmente vulnerável para testes de segurança com FAAST</p>
+        </header>
+        
+        <div class="warning">
+            <strong>Aviso!</strong> Este aplicativo contém vulnerabilidades deliberadas para fins de teste.
+            <strong>NÃO UTILIZE EM AMBIENTES DE PRODUÇÃO!</strong>
+        </div>
+        
+        <nav>
+            <a href="/login">Login</a>
+            <a href="/search">Buscar</a>
+            <a href="/admin">Admin</a>
+        </nav>
+        
+        <div class="content">
+            <h2>Vulnerabilidades Implementadas</h2>
+            
+            <div class="feature">
+                <h3>Injeção SQL (SQLi)</h3>
+                <p>Este aplicativo não sanitiza adequadamente as entradas em consultas SQL, permitindo ataques de injeção.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Cross-Site Scripting (XSS)</h3>
+                <p>A aplicação não escapa corretamente o conteúdo gerado pelo usuário antes de renderizá-lo.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Execução Remota de Código (RCE)</h3>
+                <p>Permite a execução de comandos do sistema operacional sem validação adequada.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Server-Side Request Forgery (SSRF)</h3>
+                <p>A aplicação permite que um usuário controle URLs para as quais o servidor envia solicitações.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Desserialização Insegura</h3>
+                <p>Utiliza o módulo 'pickle' do Python para desserializar dados não confiáveis.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Tokens Previsíveis</h3>
+                <p>Algoritmos de geração de tokens com seed fixo, tornando-os previsíveis.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

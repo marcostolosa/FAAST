@@ -1,0 +1,25 @@
+# LLM e Orquestração
+langchain>=0.0.267
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# SAST
+semgrep>=1.29.0
+bandit>=1.7.5
+
+# DAST
+python-owasp-zap-v2.4>=0.0.20
+
+# Utilitários
+requests>=2.28.2
+pyyaml>=6.0
+pandas>=2.0.0
+tqdm>=4.65.0
+
+# Processamento de relatórios
+markdown>=3.4.3
+jinja2>=3.1.2
+weasyprint>=59.0  # Para conversão PDF, opcional
+
+# Integração e APIs
+defectdojo-api>=1.0.4  # Opcional para integração com DefectDojo

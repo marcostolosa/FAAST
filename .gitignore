@@ -1,0 +1,12 @@
+# Directories
+.pytest_cache/
+faast.egg-info/
+__pycache__/
+venv/
+data/
+
+# Files
+faast.log
+*.py[cod]
+.env
+setup.py

@@ -1,0 +1,84 @@
+services:
+  # Aplicativo Flask vulnerável para testes
+  vulnerable-flask-app:
+    build:
+      context: .
+      dockerfile: containers/Dockerfile.app
+    ports:
+      - "5000:5000"
+    networks:
+      - faast-network
+    volumes:
+      - ./targets/flask_vulnerable_app:/app
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    restart: unless-stopped
+
+  # Banco de dados MySQL vulnerável
+  mysql-db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    networks:
+      - faast-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=faast_password
+      - MYSQL_DATABASE=vulnerable_db
+      - MYSQL_USER=faast_user
+      - MYSQL_PASSWORD=faast_user_password
+    volumes:
+      - ./targets/mysql_data:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+  # OWASP ZAP para DAST
+  zap:
+    image: owasp/zap2docker-weekly
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+    networks:
+      - faast-network
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true
+    volumes:
+      - ./data/zap:/zap/wrk
+    restart: unless-stopped
+
+  # Agente FAAST
+  faast-agent:
+    build:
+      context: .
+      dockerfile: containers/Dockerfile.agent
+    depends_on:
+      - vulnerable-flask-app
+      - zap
+    networks:
+      - faast-network
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ZAP_API_URL=http://zap:8080
+      - TARGET_URL=http://vulnerable-flask-app:5000
+    command: sleep infinity  # Mantém o container em execução para acesso manual
+
+  # Servidor Web para visualização de relatórios
+  report-server:
+    image: nginx:alpine
+    ports:
+      - "8000:80"
+    networks:
+      - faast-network
+    volumes:
+      - ./data/reports:/usr/share/nginx/html
+    restart: unless-stopped
+
+networks:
+  faast-network:
+    driver: bridge
+
+volumes:
+  mysql-data:

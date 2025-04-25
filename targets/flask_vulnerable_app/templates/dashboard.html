@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Aplicativo Vulnerável</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        h1 {
+            color: #d9534f;
+            margin: 0;
+        }
+        .user-info {
+            text-align: right;
+        }
+        .user-info strong {
+            color: #d9534f;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #d9534f;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        nav a:hover {
+            background-color: #c9302c;
+        }
+        .panel {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+        .panel h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .admin-features {
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+            padding: 15px;
+            border-radius: 3px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard</h1>
+            <div class="user-info">
+                Olá, <strong>{{ username }}</strong> 
+                <div>Função: {{ role }}</div>
+            </div>
+        </header>
+        
+        <nav>
+            <a href="/profile">Perfil</a>
+            <a href="/notes">Notas</a>
+            <a href="/search">Buscar</a>
+            {% if role == 'admin' %}
+            <a href="/admin">Admin</a>
+            {% endif %}
+            <a href="/logout">Sair</a>
+        </nav>
+        
+        <div class="panel">
+            <h2>Bem-vindo ao Painel de Controle</h2>
+            <p>Este é um painel de controle de exemplo com várias vulnerabilidades para teste.</p>
+            <p>Explore as diferentes funcionalidades:</p>
+            <ul>
+                <li><strong>Perfil</strong> - Upload de arquivos com vulnerabilidades de segurança</li>
+                <li><strong>Notas</strong> - Sistema de mensagens com XSS armazenado</li>
+                <li><strong>Buscar</strong> - Funcionalidade com XSS refletido</li>
+            </ul>
+        </div>
+        
+        <div class="panel">
+            <h2>API Endpoints</h2>
+            <p>Os seguintes endpoints de API estão disponíveis:</p>
+            <ul>
+                <li><code>/api/data?url=http://example.com</code> - Vulnerável a SSRF</li>
+                <li><code>/api/token?username=test</code> - Geração de tokens previsíveis</li>
+                <li><code>/api/store</code> - Vulnerável à desserialização insegura (POST)</li>
+            </ul>
+        </div>
+        
+        {% if role == 'admin' %}
+        <div class="admin-features">
+            <h2>Funcionalidades de Administração</h2>
+            <p>Como administrador, você tem acesso a recursos adicionais:</p>
+            <ul>
+                <li>Execução remota de comandos</li>
+                <li>Visualização de logs do sistema</li>
+                <li>Gerenciamento de usuários</li>
+            </ul>
+            <p>Acesse estes recursos no painel de administração.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
